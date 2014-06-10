@@ -6,7 +6,7 @@
 #include <USI_TWI_Master.h>
 
 // include the library code:
-// Connect via i2c, default address #0 (A0-A2 not jumpered)
+// Connect via USI , default address #0 (A0-A2 not jumpered)
 
 #define DHTTYPE DHT22 
 #define DHT_PIN 1
@@ -25,22 +25,19 @@ int16_t tMin=BAD_TEMP,tMax=BAD_TEMP;
 void setup() {
   // Set CPU to 16Mhz
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-  // set the LCD type
-  //  lcd.setMCPType(LTI_TYPE_MCP23017); 
-  // set up the LCD's number of rows and columns:
-  // Print a message to the LCD.
   dht.begin();
   i=0;
   led.I2cInit();
-  //led.Seg8b4a036aUnSleep(OLED_ADDRESS);
-  //led.Seg8b4a036aSetBrightness(OLED_ADDRESS,0,1);
-  //lled.Seg8b4a036aDisplayDec(OLED_ADDRESS,disp,5,0);
+  // light all segments
+  led.Seg8b4a036aUnSleep(OLED_ADDRESS);
+  led.Seg8b4a036aSetBrightness(OLED_ADDRESS,0,1);
+  lled.Seg8b4a036aDisplayDec(OLED_ADDRESS,disp,5,0);
 }
 
 
 
 void loop() {
-  //led.Seg8b4a036aDisplayDec(OLED_ADDRESS,disp,5,0);
+
   int8_t h=dht.readHumidity();
   int16_t t=dht.readTemperature(0);
   if(i%2){
@@ -51,6 +48,7 @@ void loop() {
   delay(500);
   led.Seg8b4a036aUnSleep(OLED_ADDRESS);
   led.Seg8b4a036aSetBrightness(OLED_ADDRESS,0,1);
+  // Display H/° and humidity/temperature
   led.Seg8b4a036aDisplayDecAndCode(OLED_ADDRESS,disp,(i%2?0x76:0x63),5,0);
   delay(1500);
   led.Seg8b4a036aSleep(OLED_ADDRESS);
